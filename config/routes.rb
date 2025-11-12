@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :patients
+  resources :patients do
+    get :search, on: :collection
+  end
   resources :constants
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

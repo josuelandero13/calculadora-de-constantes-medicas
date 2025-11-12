@@ -1,4 +1,6 @@
 class ConstantsController < ApplicationController
+  before_action :set_constant, only: %i[edit update destroy]
+
   ConstantRecord = Struct.new(
                      :patient_name, :gender, :age,
                      :constant_type, :value, :symbol,
@@ -6,7 +8,7 @@ class ConstantsController < ApplicationController
                    )
 
   def index
-    @constants = Constant.all
+    @constants = Constant.all.order(date_time_taken: :desc)
   end
 
   def show
@@ -29,22 +31,29 @@ class ConstantsController < ApplicationController
     @constant = Constant.new(processed_constant_params)
 
     if @constant.save
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to constants_path, notice: "Constante creada correctamente." }
-      end
+      redirect_to root_path, notice: "Toma registrada correctamente"
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-    @constant = Constant.find(params[:id])
+  def edit; end
+
+  def update
+    @constant.update(processed_constant_params)
+
+    if @constant.save
+      redirect_to root_path, notice: "Toma actualizada correctamente"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
- def update; end
+  def destroy
+    @constant.destroy
 
-  def destroy; end
+    redirect_to root_path, notice: "Toma eliminada correctamente"
+  end
 
   private
 

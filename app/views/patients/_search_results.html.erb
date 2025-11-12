@@ -1,0 +1,16 @@
+<% if patients.any? %>
+  <ul class="divide-y divide-gray-100">
+    <% patients.each do |patient| %>
+      <li
+        data-action="click->patient-search#select"
+        data-id="<%= patient.id %>"
+        class="px-4 py-2 hover:bg-indigo-100 cursor-pointer text-sm text-gray-800 transition-colors duration-100"
+      >
+        <%= patient.name %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="text-gray-500 text-sm py-2 px-3">Sin resultados</div>
+<% end %>
+
