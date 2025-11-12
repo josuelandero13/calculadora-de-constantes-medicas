@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Colores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo -e "${YELLOW}🚀 Iniciando desarrollo automático...${NC}"
+
+# Limpiar
+echo -e "${YELLOW}🧹 Limpiando assets...${NC}"
+./bin/rails assets:clobber
+
+# Precompilar
+echo -e "${YELLOW}🔨 Precompilando assets...${NC}"
+./bin/rails assets:precompile
+
+# Verificar que el precompile funcionó
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ Assets precompilados correctamente${NC}"
+else
+    echo -e "${RED}❌ Error precompilando assets${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}🎯 Iniciando servidor...${NC}"
+echo -e "${YELLOW}💡 Usa Ctrl+C para detener el servidor${NC}"
+echo -e "${YELLOW}📝 Los cambios en .erb requerirán: Ctrl+C + ./bin/dev-with-assets${NC}"
+echo "=================================================="
+
+# Ejecutar servidor normal
+./bin/dev
