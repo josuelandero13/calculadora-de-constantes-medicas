@@ -1,0 +1,84 @@
+<div class="bg-white px-6 py-8 shadow rounded-lg">
+  <div class="space-y-6">
+    <% @described_reading.each do |reading| %>
+      <div class="border-b border-gray-200 pb-6 justify-around">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Información del Paciente</h3>
+        <div class="flex flex-wrap items-start gap-y-2 justify-around">
+          <div class="pr-4">
+            <dt class="text-sm font-medium text-gray-500">Nombre</dt>
+            <dd class="mt-1 text-sm font-medium text-gray-900"><%= reading[:patient_name] || 'No especificado' %></dd>
+          </div>
+
+          <div class="flex items-center">
+            <div class="h-8 w-0.5 bg-gray-200"></div>
+            <div class="px-4">
+              <dt class="text-sm font-medium text-gray-500">Género</dt>
+              <dd class="mt-1 text-sm text-gray-700"><%= reading[:gender] || 'No especificado' %></dd>
+            </div>
+            <div class="h-8 w-0.5 bg-gray-200"></div>
+          </div>
+
+          <div class="pl-4">
+            <dt class="text-sm font-medium text-gray-500">Edad</dt>
+            <dd class="mt-1 text-sm font-medium text-gray-900">
+              <%= reading[:age] || 'No especificado' %>
+              <% if reading[:age].present? %>
+                <span class="text-gray-500 ml-1">años</span>
+              <% end %>
+            </dd>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-b border-gray-200 pb-6">
+        <h3 class="text-lg font-medium text-gray-900">Detalles de la Lectura</h3>
+        <dl class="mt-4 grid grid-cols-1 gap-x-4 gap-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Tipo de constante</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= reading[:constant_type] || 'No especificado' %>
+              <% if reading[:symbol].present? %>
+                <span class="text-gray-500">(<%= reading[:symbol] %>)</span>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Valor</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <div class="flex items-center">
+                <span class="font-medium"><%= number_with_precision(reading[:value], precision: 2, strip_insignificant_zeros: true) %></span>
+                <% if reading[:symbol].present? %>
+                  <span class="ml-1 text-gray-500"><%= reading[:symbol] %></span>
+                <% end %>
+              </div>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Fecha y Hora</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= reading[:measured_at]&.strftime('%d/%m/%Y , %H:%M') || 'No especificada' %>
+            </dd>
+          </div>
+          <% if reading[:interpretation].present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Interpretación</dt>
+              <dd class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= reading[:interpretation] %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8 flex justify-end space-x-3">
+    <%= link_to 'Editar', edit_constant_path,
+        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-400 hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200" %>
+
+    <%= link_to 'Eliminar', constant_path, method: :delete,
+        data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" },
+        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200" %>
+
+    <%= link_to 'Volver', constants_path,
+        class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200" %>
+  </div>
+</div>
