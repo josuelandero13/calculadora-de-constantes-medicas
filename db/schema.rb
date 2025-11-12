@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_11_160949) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_12_160921) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "constants", force: :cascade do |t|
     t.bigint "patient_id", null: false
     t.bigint "type_constant_id", null: false
-    t.bigint "unit_of_measurement_id", null: false
+    t.bigint "unit_of_measurement_id"
     t.decimal "value", precision: 10, scale: 2, null: false
     t.datetime "date_time_taken", default: -> { "CURRENT_TIMESTAMP" }
     t.text "notes"
@@ -45,6 +45,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_11_160949) do
     t.string "state", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "unit_of_measurement_id"
+    t.index ["unit_of_measurement_id"], name: "index_type_constants_on_unit_of_measurement_id"
   end
 
   create_table "unit_of_measurements", force: :cascade do |t|
@@ -57,4 +59,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_11_160949) do
   add_foreign_key "constants", "patients", on_delete: :cascade
   add_foreign_key "constants", "type_constants"
   add_foreign_key "constants", "unit_of_measurements"
+  add_foreign_key "type_constants", "unit_of_measurements"
 end

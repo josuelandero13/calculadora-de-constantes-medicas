@@ -14,7 +14,7 @@
             options_for_select(
               [['Seleccione un tipo', '']] +
               TypeConstant.with_unit_symbol.map { |t|
-                ["#{t.name}", t.id, { data: { symbol: t.unit_symbol || "Unidad" } }]
+                ["#{t.name} (#{t.unit_symbol})", t.id, { data: { symbol: t.unit_symbol } }]
               },
               @constant.type_constant_id
             ),
