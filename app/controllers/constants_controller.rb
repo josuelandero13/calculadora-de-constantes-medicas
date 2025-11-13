@@ -8,19 +8,42 @@ class ConstantsController < ApplicationController
                    )
 
   def index
-    @constants = Constant.all.order(date_time_taken: :desc)
+    @constants = Constant.all.order(updated_at: :desc)
+
+    # Aplicar filtros
+    @constants = @constants.where(calculated_state: params[:state]) if params[:state].present?
+    @constants = @constants.where(constant_type_id: params[:type]) if params[:type].present?
+    @constants = @constants.where(patient_id: params[:patient]) if params[:patient].present?
+
+    # Filtro por fecha
+    if params[:start_date].present?
+      @constants = @constants.where("date_time_taken >= ?", params[:start_date])
+    end
+
+    if params[:end_date].present?
+      @constants = @constants.where("date_time_taken <= ?", params[:end_date] + " 23:59:59")
+    end
+
+    @patients = Patient.all
+    @constant_types = ConstantType.all
   end
 
   def show
-    results = Constant.joins(:patient, :type_constant, :unit_of_measurement)
-                      .where(id: params[:id])
-                      .pluck(
-                        "patient.name", :gender, :age, "type_constant.name",
-                        :value, :symbol, :date_time_taken,
-                        "type_constant.state", :notes
-                      )
+    constant = Constant.includes(:patient, :constant_type, :unit_of_measurement)
+                      .find(params[:id])
+    results = [
+      constant.patient.name,
+      constant.patient.gender,
+      constant.patient.age,
+      constant.constant_type.name,
+      constant.value,
+      constant.unit_of_measurement&.symbol,
+      constant.date_time_taken,
+      constant.calculated_state,
+      constant.notes
+    ]
 
-    @described_reading = results.map { |row| ConstantRecord.new(*row).to_h }
+    @described_reading = ConstantRecord.new(*results).to_h
   end
 
   def new
@@ -62,16 +85,11 @@ class ConstantsController < ApplicationController
   end
 
   def processed_constant_params
-    permitted = params.require(:constant).permit(
-      :patient_id,
-      :type_constant_id,
-      :unit_of_measurement_id,
-      :value,
-      :date_time_taken,
-      :date,
-      :time,
-      :notes
-    )
+    permitted = params.require(:constant)
+                      .permit(
+                        :patient_id, :constant_type_id, :value,
+                        :notes, :date_time_taken, :date, :time
+                      )
 
     if permitted[:date].present? && permitted[:time].present?
       datetime_str = "#{permitted[:date]} #{permitted[:time]}"

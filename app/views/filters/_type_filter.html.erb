@@ -1,0 +1,18 @@
+<div class="space-y-2">
+  <h3 class="text-sm font-medium text-gray-700">Tipo de constante</h3>
+  <div class="flex flex-wrap gap-2">
+    <%= link_to constants_path,
+        class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-1 #{params[:type].blank? ? 'bg-blue-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" do %>
+      <span>Todos</span>
+      <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full"><%= ConstantType.count %></span>
+    <% end %>
+
+    <% ConstantType.all.each do |type| %>
+      <%= link_to constants_path(type: type.id, state: params[:state]),
+          class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-1 #{params[:type].to_i == type.id ? 'bg-indigo-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" do %>
+        <span><%= type.name %></span>
+        <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full"><%= type.constants.count %></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>

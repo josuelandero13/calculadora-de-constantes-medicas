@@ -10,21 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_12_160921) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_13_030130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "constant_ranges", force: :cascade do |t|
+    t.bigint "constant_type_id", null: false
+    t.string "state", null: false
+    t.text "description", null: false
+    t.decimal "min_value", precision: 10, scale: 2
+    t.decimal "max_value", precision: 10, scale: 2
+    t.integer "priority", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "color_class", default: "bg-gray-400", null: false
+    t.index ["color_class"], name: "index_constant_ranges_on_color_class"
+    t.index ["constant_type_id", "min_value", "max_value"], name: "idx_on_constant_type_id_min_value_max_value_7fb9d2ad0a"
+    t.index ["constant_type_id", "priority"], name: "index_constant_ranges_on_constant_type_id_and_priority"
+    t.index ["constant_type_id"], name: "index_constant_ranges_on_constant_type_id"
+  end
+
+  create_table "constant_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "unit"
+  end
+
   create_table "constants", force: :cascade do |t|
     t.bigint "patient_id", null: false
-    t.bigint "type_constant_id", null: false
+    t.bigint "constant_type_id", null: false
     t.bigint "unit_of_measurement_id"
     t.decimal "value", precision: 10, scale: 2, null: false
     t.datetime "date_time_taken", default: -> { "CURRENT_TIMESTAMP" }
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "calculated_state"
+    t.index ["constant_type_id"], name: "index_constants_on_constant_type_id"
     t.index ["patient_id"], name: "index_constants_on_patient_id"
-    t.index ["type_constant_id"], name: "index_constants_on_type_constant_id"
     t.index ["unit_of_measurement_id"], name: "index_constants_on_unit_of_measurement_id"
   end
 
@@ -34,19 +58,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_160921) do
     t.integer "age", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.check_constraint "gender::text = ANY (ARRAY['Masculino'::character varying, 'Femenino'::character varying, 'Otro'::character varying]::text[])", name: "gender_check"
-  end
-
-  create_table "type_constants", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "description", null: false
-    t.decimal "min_value", precision: 10, scale: 2
-    t.decimal "max_value", precision: 10, scale: 2
-    t.string "state", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "unit_of_measurement_id"
-    t.index ["unit_of_measurement_id"], name: "index_type_constants_on_unit_of_measurement_id"
+    t.check_constraint "gender::text = ANY (ARRAY['Masculino'::character varying::text, 'Femenino'::character varying::text, 'Otro'::character varying::text])", name: "gender_check"
   end
 
   create_table "unit_of_measurements", force: :cascade do |t|
@@ -56,8 +68,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_12_160921) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "constant_ranges", "constant_types", on_delete: :cascade
+  add_foreign_key "constants", "constant_types"
   add_foreign_key "constants", "patients", on_delete: :cascade
-  add_foreign_key "constants", "type_constants"
   add_foreign_key "constants", "unit_of_measurements"
-  add_foreign_key "type_constants", "unit_of_measurements"
 end
