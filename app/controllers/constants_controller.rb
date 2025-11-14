@@ -53,22 +53,26 @@ class ConstantsController < ApplicationController
   def create
     @constant = Constant.new(processed_constant_params)
 
-    if @constant.save
-      redirect_to root_path, notice: "Toma registrada correctamente"
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @constant.save
+        format.turbo_stream
+        format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
+      else
+        format.turbo_stream
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
   def edit; end
 
   def update
-    @constant.update(processed_constant_params)
+    @constant.assign_attributes(processed_constant_params)
 
     if @constant.save
-      redirect_to root_path, notice: "Toma actualizada correctamente"
+      redirect_to root_path, notice: "Toma actualizada exitosamente"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
@@ -79,6 +83,14 @@ class ConstantsController < ApplicationController
   end
 
   private
+
+  def close_modal
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update("modal", "")
+      end
+    end
+  end
 
   def set_constant
     @constant = Constant.find(params[:id])

@@ -1,6 +1,13 @@
-<div class="space-y-2 col-span-2" data-controller="date-filter">
-  <label class="block text-sm font-medium text-gray-700">Rango de fechas</label>
+<div class="space-y-3" data-controller="date-filter">
+  <label class="block text-sm font-semibold text-gray-900 flex items-center gap-2">
+    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+    </svg>
+    Rango de fechas
+  </label>
+  
   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <!-- Fecha inicio -->
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -12,9 +19,10 @@
              name="start_date"
              value="<%= params[:start_date] %>"
              data-date-filter-target="startDate"
-             class="pl-10 block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+             class="pl-10 block w-full bg-white border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-300">
     </div>
 
+    <!-- Fecha fin -->
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg class="h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -26,12 +34,13 @@
              name="end_date"
              value="<%= params[:end_date] %>"
              data-date-filter-target="endDate"
-             class="pl-10 block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+             class="pl-10 block w-full bg-white border-2 border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-300">
     </div>
 
+    <!-- Botón aplicar -->
     <button type="button"
             data-action="click->date-filter#applyFilter"
-            class="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            class="flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-lg shadow-green-200 hover:shadow-green-300 hover:scale-105">
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
       </svg>
@@ -39,15 +48,21 @@
     </button>
   </div>
 
+  <!-- Información del rango aplicado -->
   <% if params[:start_date].present? || params[:end_date].present? %>
-    <div class="text-xs text-gray-500 mt-1">
-      <% if params[:start_date].present? && params[:end_date].present? %>
-        Mostrando registros desde <%= l(params[:start_date].to_date, format: :long) %> hasta <%= l(params[:end_date].to_date, format: :long) %>
-      <% elsif params[:start_date].present? %>
-        Mostrando registros desde <%= l(params[:start_date].to_date, format: :long) %>
-      <% else %>
-        Mostrando registros hasta <%= l(params[:end_date].to_date, format: :long) %>
-      <% end %>
+    <div class="flex items-center gap-2 text-xs text-green-600 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span class="font-medium">
+        <% if params[:start_date].present? && params[:end_date].present? %>
+          Desde <%= l(params[:start_date].to_date, format: :long) %> hasta <%= l(params[:end_date].to_date, format: :long) %>
+        <% elsif params[:start_date].present? %>
+          Desde <%= l(params[:start_date].to_date, format: :long) %>
+        <% else %>
+          Hasta <%= l(params[:end_date].to_date, format: :long) %>
+        <% end %>
+      </span>
     </div>
   <% end %>
 </div>

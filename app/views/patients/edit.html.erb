@@ -1,2 +1,21 @@
-<h1>Patients#edit</h1>
-<p>Find me in app/views/patients/edit.html.erb</p>
+<div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        <%= @patient.persisted? ? 'Editar Paciente' : 'Nuevo Paciente' %>
+      </h1>
+      <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+          <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+          </svg>
+          <%= @patient.persisted? ? 'Actualizando información del paciente' : 'Complete la información del nuevo paciente' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-10 sm:mt-0">
+    <%= render 'form', patient: @patient %>
+  </div>
+</div>

@@ -1,34 +1,59 @@
 import { Controller } from "@hotwired/stimulus";
-import { Turbo } from "@hotwired/turbo-rails";
-
-// data-controller="modal"
 export default class extends Controller {
-  close() {
-    Turbo.visit("/");
-  }
+  static targets = ["patientModal", "constantModal", "editConstantModal"];
 
-  connect() {
-    this.clickOutside = this._handleClickOutside.bind(this);
-    this.keyPress = this._handleKeyPress.bind(this);
+  open(event) {
+    event.preventDefault();
+    const target = event.currentTarget.dataset.target;
 
-    document.addEventListener("click", this.clickOutside);
-    document.addEventListener("keydown", this.keyPress);
-  }
+    let modal;
+    if (target === "patient-modal") {
+      modal = document.getElementById("patient-modal");
+    } else if (target === "constant-modal") {
+      modal = document.getElementById("constant-modal");
+    } else if (target === "edit-constant-modal") {
+      modal = document.getElementById("edit-constant-modal");
+    }
 
-  disconnect() {
-    document.removeEventListener("click", this.clickOutside);
-    document.removeEventListener("keydown", this.keyPress);
-  }
+    if (modal) {
+      modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
 
-  _handleClickOutside(event) {
-    if (event.target.closest(".bg-white") === null) {
-      this.close();
+      const firstInput = modal.querySelector("input, select, textarea");
+
+      if (firstInput) firstInput.focus();
     }
   }
 
-  _handleKeyPress(event) {
-    if (event.key === "Escape") {
+  close(event) {
+    event?.preventDefault();
+
+    const modals = document.querySelectorAll('[id$="-modal"]');
+    modals.forEach((modal) => {
+      if (!modal.classList.contains("hidden")) {
+        modal.classList.add("hidden");
+      }
+    });
+
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  handleBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+      this.close(event);
+    }
+  }
+
+  handleSuccess(event) {
+    const { success } = event.detail;
+
+    console.log("Turbo submit end");
+
+    if (success) {
       this.close();
+
+      const form = event.target;
+      form.reset();
     }
   }
 }

@@ -18,12 +18,14 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="h-screen overflow-y-auto">
+    <%= render "shared/header" %>
+
     <div id="flash">
       <%= render "shared/flash" %>
     </div>
 
-    <main class="bg-[#fffef7] h-screen">
+    <main class="bg-[#fffef7]">
       <%= yield %>
     </main>
   </body>

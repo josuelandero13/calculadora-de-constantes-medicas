@@ -1,12 +1,18 @@
-<turbo-frame id="modal" data-controller="modal">
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
+<turbo-frame id="modal">
+  <div
+    data-controller="secondary-modal"
+    data-secondary-modal-target="backdrop"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm"
+    data-action="click->secondary-modal#closeBackground"
+  >
     <div
-      class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative transform transition-all duration-300 scale-95 opacity-0 animate-fadeInUp"
+      class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 relative transform transition-all duration-300 scale-95 opacity-0"
     >
       <button
-        data-action="click->modal#close"
+        data-action="click->secondary-modal#close"
         class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
         aria-label="Cerrar"
+        type="button"
       >
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
