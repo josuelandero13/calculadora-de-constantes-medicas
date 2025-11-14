@@ -24,7 +24,6 @@ Aplicación web desarrollada en Ruby on Rails 7 para el registro y evaluación d
 - Rails 7.2.3
 - PostgreSQL 16+
 
-
 ## Instalación y Puesta en Marcha
 
 Sigue estos pasos para instalar y ejecutar la aplicación localmente:
