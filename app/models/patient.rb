@@ -7,4 +7,8 @@ class Patient < ApplicationRecord
   validates :gender, presence: true, inclusion: { in: GENDERS }
   validates :age, presence: true,
                   numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  def self.for_select
+    pluck(:id, :name, :age)
+  end
 end

@@ -9,14 +9,14 @@
     <%= link_to constants_path,
         class: "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 border-2 #{params[:type].blank? ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-200' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700'}" do %>
       <span>Todos</span>
-      <span class="bg-white/20 text-xs px-2 py-1 rounded-full font-semibold min-w-6"><%= ConstantType.count %></span>
+      <span class="bg-white/20 text-xs px-2 py-1 rounded-full font-semibold min-w-6"><%= Constant.count %></span>
     <% end %>
 
-    <% ConstantType.all.each do |type| %>
-      <%= link_to constants_path(type: type.id, state: params[:state]),
+    <% @constant_types.each do |type| %>
+      <%= link_to constants_path(type: type.id, state: params[:state], patient: params[:patient], start_date: params[:start_date], end_date: params[:end_date]),
           class: "px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 border-2 #{params[:type].to_i == type.id ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-200' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700'}" do %>
         <span><%= type.name %></span>
-        <span class="bg-white/20 text-xs px-2 py-1 rounded-full font-semibold min-w-6"><%= type.constants.count %></span>
+        <span class="bg-white/20 text-xs px-2 py-1 rounded-full font-semibold min-w-6"><%= type.display_constants_count %></span>
       <% end %>
     <% end %>
   </div>

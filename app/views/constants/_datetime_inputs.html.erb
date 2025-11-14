@@ -1,0 +1,15 @@
+<div>
+  <%= form.label :date_time_taken, "Fecha y Hora de la Constante", class: "block text-sm font-medium text-gray-700 mb-1" %>
+  <div class="mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="col-span-2">
+      <%= form.date_field :date,
+          value: form.object.date_time_taken&.strftime("%Y-%m-%d") || Time.current.strftime("%Y-%m-%d"),
+          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+    <div class="col-span-2">
+      <%= form.time_field :time,
+          value: form.object.date_time_taken&.strftime("%H:%M") || Time.current.strftime("%H:%M"),
+          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+  </div>
+</div>

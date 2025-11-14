@@ -1,0 +1,18 @@
+<div class="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100 hover:shadow-3xl transition-all duration-500">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200/60">
+      <thead class="bg-gradient-to-r from-[rgb(0_123_254)] to-blue-600">
+        <tr>
+          <% constants_table_headers.each do |header| %>
+            <%= constants_table_header_cell(header) %>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody id="constants-table-body" class="bg-white divide-y divide-gray-200/60">
+        <% @constants.each_with_index do |constant, idx| %>
+          <%= render 'constants/constant', constant: constant, idx: idx %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,3 +1,11 @@
 <%= turbo_stream.append "constants-table-body" do %>
   <%= render "constants/constant", constant: @constant, idx: Constant.count %>
 <% end %>
+
+<%= turbo_stream.replace "constant_form" do %>
+  <%= render "constants/form_modal", constant: Constant.new %>
+<% end %>
+
+<%= turbo_stream.update "flash" do %>
+  <%= render "shared/flash" %>
+<% end %>

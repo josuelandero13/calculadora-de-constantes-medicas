@@ -24,47 +24,69 @@ Aplicación web desarrollada en Ruby on Rails 7 para el registro y evaluación d
 - Rails 7.2.3
 - PostgreSQL 16+
 
-## Instalación
 
-1. Clonar el repositorio:
+## Instalación y Puesta en Marcha
+
+Sigue estos pasos para instalar y ejecutar la aplicación localmente:
+
+1. **Clona el repositorio:**
    ```bash
-   git clone [URL_DEL_REPOSITORIO]
+   git clone git@github.com:josuelandero13/calculadora-de-constantes-medicas.git
    cd calculadora-de-constantes-medicas
    ```
 
-2. Instalar dependencias:
+2. **Instala las dependencias:**
    ```bash
    bundle install
    ```
 
-3. Configurar base de datos:
+3. **Configura la base de datos:**
+   - Edita el archivo `config/database.yml` si necesitas personalizar la conexión.
+   - Si tu PostgreSQL requiere autenticación (md5 en `pg_hba.conf`), crea un archivo `.env` en la raíz con:
+     ```bash
+     DB_USER=tu_usuario_postgres
+     DB_PASSWORD=tu_contraseña_postgres
+     ```
+   - Añade `.env` a `.gitignore` para proteger tus credenciales:
+     ```bash
+     echo ".env" >> .gitignore
+     ```
+   - Crea y migra la base de datos:
+     ```bash
+     rails db:create
+     rails db:migrate
+     rails db:seed # Opcional, para datos de ejemplo
+     ```
 
-   Si tu configuración de PostgreSQL requiere autenticación (método md5 en pg_hba.conf), sigue estos pasos:
-
-   3.1. Crear un archivo `.env` en la raíz del proyecto con las credenciales de PostgreSQL:
+4. **Prepara los assets (opcional, para desarrollo avanzado):**
    ```bash
-   # .env
-   DB_USER=tu_usuario_postgres
-   DB_PASSWORD=tu_contraseña_postgres
+   rails assets:precompile
    ```
 
-   3.2. Asegúrate de agregar `.env` a tu archivo `.gitignore` para no subir credenciales al repositorio:
-   ```bash
-   echo ".env" >> .gitignore
-   ```
-
-   3.3. Crear y migrar la base de datos:
-   ```bash
-   rails db:create
-   rails db:migrate
-   ```
-
-4. Iniciar el servidor de desarrollo:
+5. **Inicia el servidor de desarrollo:**
    ```bash
    ./bin/dev
    ```
 
-5. Abrir en el navegador:
-   ```
-   http://localhost:3000
-   ```
+   - O bien puedes omitir los pasos 4 y 3 anteriores y ejecutar el comando:
+     ```bash
+     ./bin/dev-with-assets
+     ```
+
+6. **Accede a la aplicación:**
+   Abre tu navegador en:
+   [http://localhost:3000](http://localhost:3000)
+
+### Notas adicionales
+- El proyecto utiliza Rails 7, Hotwire y TailwindCSS para una experiencia moderna y rápida.
+- El archivo `Procfile.dev` permite iniciar todos los servicios necesarios en desarrollo.
+
+### Documentación automática con Deepwiki
+
+Si reemplazas `github.com` por `deepwiki.tech` en la URL del repositorio, se genera automáticamente una documentación interactiva y navegable del proyecto. Ejemplo:
+
+```
+https://deepwiki.tech/josuelandero13/calculadora-de-constantes-medicas
+```
+
+Esto te permite explorar la estructura, modelos, controladores y vistas del proyecto de forma visual y sencilla.

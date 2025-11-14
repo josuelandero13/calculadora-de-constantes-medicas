@@ -8,24 +8,9 @@ class ConstantsController < ApplicationController
                    )
 
   def index
-    @constants = Constant.all.order(updated_at: :desc)
-
-    # Aplicar filtros
-    @constants = @constants.where(calculated_state: params[:state]) if params[:state].present?
-    @constants = @constants.where(constant_type_id: params[:type]) if params[:type].present?
-    @constants = @constants.where(patient_id: params[:patient]) if params[:patient].present?
-
-    # Filtro por fecha
-    if params[:start_date].present?
-      @constants = @constants.where("date_time_taken >= ?", params[:start_date])
-    end
-
-    if params[:end_date].present?
-      @constants = @constants.where("date_time_taken <= ?", params[:end_date] + " 23:59:59")
-    end
-
+    @constants = FindConstants.new.call(params)
     @patients = Patient.all
-    @constant_types = ConstantType.all
+    @constant_types = ConstantType.with_constants_count
   end
 
   def show
@@ -48,20 +33,37 @@ class ConstantsController < ApplicationController
 
   def new
     @constant = Constant.new
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "constant_form",
+          partial: "constants/form_modal",
+          locals: { constant: @constant }
+        )
+      end
+      format.html
+    end
   end
 
   def create
     @constant = Constant.new(processed_constant_params)
 
     respond_to do |format|
-      if @constant.save
-        format.turbo_stream
-        format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
-      else
-        format.turbo_stream
-        format.html { render :new, status: :unprocessable_entity }
+    if @constant.save
+      format.turbo_stream
+      format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
+    else
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "constant_form",
+          partial: "constants/form_modal",
+          locals: { constant: @constant }
+        )
       end
+      format.html { render :new, status: :unprocessable_entity }
     end
+  end
   end
 
   def edit; end
