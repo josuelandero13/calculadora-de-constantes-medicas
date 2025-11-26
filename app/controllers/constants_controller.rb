@@ -1,7 +1,6 @@
 class ConstantsController < ApplicationController
   before_action :set_constant, only: %i[edit update destroy]
 
-
   def index
     @constants = FindConstants.new.call(params)
     @patients = Patient.all
@@ -10,7 +9,8 @@ class ConstantsController < ApplicationController
 
   def show
     constant = Constant.includes(:patient, :constant_type, :unit_of_measurement)
-                      .find(params[:id])
+                       .find(params[:id])
+
     @described_reading = ConstantPresenter.new(constant)
   end
 
@@ -33,20 +33,20 @@ class ConstantsController < ApplicationController
     @constant = Constant.new(constant_params)
 
     respond_to do |format|
-    if @constant.save
-      format.turbo_stream
-      format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
-    else
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "constant_form",
-          partial: "constants/form_modal",
-          locals: { constant: @constant }
-        )
+      if @constant.save
+        format.turbo_stream
+        format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "constant_form",
+            partial: "constants/form_modal",
+            locals: { constant: @constant }
+          )
+        end
+        format.html { render :new, status: :unprocessable_entity }
       end
-      format.html { render :new, status: :unprocessable_entity }
     end
-  end
   end
 
   def edit; end
