@@ -1,0 +1,15 @@
+one:
+  patient: one
+  constant_type: one
+  unit_of_measurement: one
+  value: 100.0
+  date_time_taken: <%= Time.current %>
+  notes: "Normal"
+
+two:
+  patient: two
+  constant_type: two
+  unit_of_measurement: two
+  value: 75.0
+  date_time_taken: <%= Time.current %>
+  notes: "Resting"

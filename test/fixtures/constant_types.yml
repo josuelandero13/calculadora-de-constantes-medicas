@@ -1,0 +1,7 @@
+one:
+  name: "Glucose"
+  unit: "mg/dL"
+
+two:
+  name: "Heart Rate"
+  unit: "bpm"

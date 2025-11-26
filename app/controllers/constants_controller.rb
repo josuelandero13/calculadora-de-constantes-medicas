@@ -1,11 +1,6 @@
 class ConstantsController < ApplicationController
   before_action :set_constant, only: %i[edit update destroy]
 
-  ConstantRecord = Struct.new(
-                     :patient_name, :gender, :age,
-                     :constant_type, :value, :symbol,
-                     :measured_at, :health_state, :interpretation
-                   )
 
   def index
     @constants = FindConstants.new.call(params)
@@ -16,19 +11,7 @@ class ConstantsController < ApplicationController
   def show
     constant = Constant.includes(:patient, :constant_type, :unit_of_measurement)
                       .find(params[:id])
-    results = [
-      constant.patient.name,
-      constant.patient.gender,
-      constant.patient.age,
-      constant.constant_type.name,
-      constant.value,
-      constant.unit_of_measurement&.symbol,
-      constant.date_time_taken,
-      constant.calculated_state,
-      constant.notes
-    ]
-
-    @described_reading = ConstantRecord.new(*results).to_h
+    @described_reading = ConstantPresenter.new(constant)
   end
 
   def new
@@ -47,7 +30,7 @@ class ConstantsController < ApplicationController
   end
 
   def create
-    @constant = Constant.new(processed_constant_params)
+    @constant = Constant.new(constant_params)
 
     respond_to do |format|
     if @constant.save
@@ -69,7 +52,7 @@ class ConstantsController < ApplicationController
   def edit; end
 
   def update
-    @constant.assign_attributes(processed_constant_params)
+    @constant.assign_attributes(constant_params)
 
     if @constant.save
       redirect_to root_path, notice: "Toma actualizada exitosamente"
@@ -98,18 +81,11 @@ class ConstantsController < ApplicationController
     @constant = Constant.find(params[:id])
   end
 
-  def processed_constant_params
-    permitted = params.require(:constant)
-                      .permit(
-                        :patient_id, :constant_type_id, :value,
-                        :notes, :date_time_taken, :date, :time
-                      )
-
-    if permitted[:date].present? && permitted[:time].present?
-      datetime_str = "#{permitted[:date]} #{permitted[:time]}"
-      permitted[:date_time_taken] = Time.zone.parse(datetime_str)
-    end
-
-    permitted.except(:date, :time)
+  def constant_params
+    params.require(:constant)
+          .permit(
+            :patient_id, :constant_type_id, :value,
+            :notes, :date_time_taken, :date, :time
+          )
   end
 end

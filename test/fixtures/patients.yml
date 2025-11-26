@@ -1,0 +1,9 @@
+one:
+  name: "John Doe"
+  gender: "Masculino"
+  age: 30
+
+two:
+  name: "Jane Smith"
+  gender: "Femenino"
+  age: 25

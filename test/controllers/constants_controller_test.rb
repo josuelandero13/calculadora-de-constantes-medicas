@@ -1,38 +1,54 @@
 require "test_helper"
 
 class ConstantsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get constants_index_url
-    assert_response :success
+  setup do
+    @constant = constants(:one)
   end
 
-  test "should get show" do
-    get constants_show_url
+  test "should get index" do
+    get constants_url
     assert_response :success
   end
 
   test "should get new" do
-    get constants_new_url
+    get new_constant_url
     assert_response :success
   end
 
-  test "should get create" do
-    get constants_create_url
+  test "should create constant" do
+    assert_difference("Constant.count") do
+      post constants_url, params: { constant: {
+        patient_id: @constant.patient_id,
+        constant_type_id: @constant.constant_type_id,
+        value: @constant.value,
+        date: "2023-10-27",
+        time: "10:00"
+      } }
+    end
+
+    assert_redirected_to constants_path
+  end
+
+  test "should show constant" do
+    get constant_url(@constant)
     assert_response :success
   end
 
   test "should get edit" do
-    get constants_edit_url
+    get edit_constant_url(@constant)
     assert_response :success
   end
 
-  test "should get update" do
-    get constants_update_url
-    assert_response :success
+  test "should update constant" do
+    patch constant_url(@constant), params: { constant: { value: 120.0 } }
+    assert_redirected_to root_path
   end
 
-  test "should get destroy" do
-    get constants_destroy_url
-    assert_response :success
+  test "should destroy constant" do
+    assert_difference("Constant.count", -1) do
+      delete constant_url(@constant)
+    end
+
+    assert_redirected_to root_path
   end
 end

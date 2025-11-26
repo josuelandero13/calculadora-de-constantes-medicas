@@ -1,0 +1,7 @@
+one:
+  symbol: "mg/dL"
+  name: "Milligrams per deciliter"
+
+two:
+  symbol: "bpm"
+  name: "Beats per minute"

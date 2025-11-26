@@ -5,14 +5,14 @@
         <div class="flex flex-wrap items-start gap-y-2 justify-around">
           <div class="pr-4">
             <dt class="text-sm font-medium text-gray-500">Nombre</dt>
-            <dd class="mt-1 text-sm font-medium text-gray-900"><%= @described_reading[:patient_name] || 'No especificado' %></dd>
+            <dd class="mt-1 text-sm font-medium text-gray-900"><%= @described_reading.patient_name || 'No especificado' %></dd>
           </div>
 
           <div class="flex items-center">
             <div class="h-8 w-0.5 bg-gray-200"></div>
             <div class="px-4">
               <dt class="text-sm font-medium text-gray-500">Género</dt>
-              <dd class="mt-1 text-sm text-gray-700"><%= @described_reading[:gender] || 'No especificado' %></dd>
+              <dd class="mt-1 text-sm text-gray-700"><%= @described_reading.gender || 'No especificado' %></dd>
             </div>
             <div class="h-8 w-0.5 bg-gray-200"></div>
           </div>
@@ -20,8 +20,8 @@
           <div class="pl-4">
             <dt class="text-sm font-medium text-gray-500">Edad</dt>
             <dd class="mt-1 text-sm font-medium text-gray-900">
-              <%= @described_reading[:age] || 'No especificado' %>
-              <% if @described_reading[:age].present? %>
+              <%= @described_reading.age || 'No especificado' %>
+              <% if @described_reading.age.present? %>
                 <span class="text-gray-500 ml-1">años</span>
               <% end %>
             </dd>
@@ -35,9 +35,9 @@
           <div>
             <dt class="text-sm font-medium text-gray-500">Tipo de constante</dt>
             <dd class="mt-1 text-sm text-gray-900">
-              <%= @described_reading[:constant_type] || 'No especificado' %>
-              <% if @described_reading[:symbol].present? %>
-                <span class="text-gray-500">(<%= @described_reading[:symbol] %>)</span>
+              <%= @described_reading.constant_type_name || 'No especificado' %>
+              <% if @described_reading.symbol.present? %>
+                <span class="text-gray-500">(<%= @described_reading.symbol %>)</span>
               <% end %>
             </dd>
           </div>
@@ -45,9 +45,9 @@
             <dt class="text-sm font-medium text-gray-500">Valor</dt>
             <dd class="mt-1 text-sm text-gray-900">
               <div class="flex items-center">
-                <span class="font-medium"><%= number_with_precision(@described_reading[:value], precision: 2, strip_insignificant_zeros: true) %></span>
-                <% if @described_reading[:symbol].present? %>
-                  <span class="ml-1 text-gray-500"><%= @described_reading[:symbol] %></span>
+                <span class="font-medium"><%= number_with_precision(@described_reading.value, precision: 2, strip_insignificant_zeros: true) %></span>
+                <% if @described_reading.symbol.present? %>
+                  <span class="ml-1 text-gray-500"><%= @described_reading.symbol %></span>
                 <% end %>
               </div>
             </dd>
@@ -55,13 +55,13 @@
           <div>
             <dt class="text-sm font-medium text-gray-500">Fecha y Hora</dt>
             <dd class="mt-1 text-sm text-gray-900">
-              <%= @described_reading[:measured_at]&.strftime('%d/%m/%Y , %H:%M') || 'No especificada' %>
+              <%= @described_reading.measured_at&.strftime('%d/%m/%Y , %H:%M') || 'No especificada' %>
             </dd>
           </div>
-          <% if @described_reading[:interpretation].present? %>
+          <% if @described_reading.interpretation.present? %>
             <div>
               <dt class="text-sm font-medium text-gray-500">Interpretación</dt>
-              <dd class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @described_reading[:interpretation] %></dd>
+              <dd class="mt-1 text-sm text-gray-900 whitespace-pre-line"><%= @described_reading.interpretation %></dd>
             </div>
           <% end %>
         </dl>

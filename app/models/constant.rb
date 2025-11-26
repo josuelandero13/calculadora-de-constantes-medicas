@@ -20,6 +20,10 @@ class Constant < ApplicationRecord
     [ value, constant_type_unit.presence ].compact.join(" ")
   end
 
+  attr_accessor :date, :time
+
+  before_validation :set_date_time_taken
+
   private
 
   def calculate_state
@@ -27,5 +31,11 @@ class Constant < ApplicationRecord
 
     range = constant_type.find_range_for_value(value)
     self.calculated_state = range&.state
+  end
+
+  def set_date_time_taken
+    if date.present? && time.present?
+      self.date_time_taken = Time.zone.parse("#{date} #{time}")
+    end
   end
 end
