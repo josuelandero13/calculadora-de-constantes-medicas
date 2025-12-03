@@ -35,7 +35,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # Gem para cargar variables de entorno desde un archivo .env
-gem "dotenv-rails", "~> 3.1"
+gem "dotenv-rails", "~> 3.2"
 
 # Gem para Tailwind CSS
 gem "tailwindcss-rails", "~> 4.4"
