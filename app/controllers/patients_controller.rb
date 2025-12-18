@@ -40,7 +40,8 @@ class PatientsController < ApplicationController
   end
 
   def search
-    @patients = Patient.where("name ILIKE ?", "%#{params[:query]}%").limit(10)
+    @patients = Patient.search(params[:query]).limit(10)
+
     render partial: "patients/search_results", locals: { patients: @patients }
   end
 

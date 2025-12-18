@@ -12,6 +12,16 @@ class Constant < ApplicationRecord
   delegate :name, :unit, to: :constant_type, prefix: true
   delegate :symbol, to: :unit_of_measurement, prefix: true, allow_nil: true
 
+  scope :by_state, ->(state) { where(calculated_state: state) if state.present? }
+  scope :by_type, ->(type_id) { where(constant_type_id: type_id) if type_id.present? }
+  scope :by_patient, ->(patient_id) { where(patient_id: patient_id) if patient_id.present? }
+  scope :in_date_range, ->(start_date, end_date) {
+    query = all
+    query = query.where("date_time_taken >= ?", start_date) if start_date.present?
+    query = query.where("date_time_taken <= ?", end_date + " 23:59:59") if end_date.present?
+    query
+  }
+
   def measured_at
     date_time_taken&.strftime("%d/%m/%Y %H:%M")
   end

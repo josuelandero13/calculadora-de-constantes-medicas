@@ -1,20 +1,31 @@
-<tr id="constant_<%= constant.id %>" class="hover:bg-gray-50 transition-colors duration-150">
+<tr
+  id="constant_<%= constant.id %>"
+  class="hover:bg-gray-50 transition-colors duration-150"
+>
   <td class="px-6 py-4 whitespace-nowrap">
-    <div class="text-sm font-medium text-gray-900"><%= constant.patient_name %></div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap">
-    <div class="text-sm text-gray-700">
-      <%= "#{constant_type_icon(constant.constant_type_name)} #{constant.constant_type_name}" %>
+    <div class="text-sm font-medium text-gray-900">
+      <%= constant.patient_name %>
     </div>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
-    <div class="text-sm font-semibold text-gray-900"><%= constant.value_with_unit %></div>
+    <div class="text-sm text-gray-700">
+      <%=
+        "#{constant_type_icon(constant.constant_type_name)} #{constant.constant_type_name}"
+      %>
+    </div>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
-    <div class="text-sm text-gray-700"><%= constant.measured_at %></div>
+    <div class="text-sm font-semibold text-gray-900">
+      <%= constant.value_with_unit %>
+    </div>
   </td>
   <td class="px-6 py-4 whitespace-nowrap">
-    <%= constant_state_badge(constant) %>
+    <div class="text-sm text-gray-700">
+      <%= format_measured_at(constant.measured_at) %>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <%= constant_state_badge(constant, @state_colors) %>
   </td>
   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
     <div class="flex items-center justify-end space-x-2">

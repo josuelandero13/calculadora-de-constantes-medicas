@@ -8,6 +8,8 @@ class Patient < ApplicationRecord
   validates :age, presence: true,
                   numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  scope :search, ->(query) { where("name ILIKE ?", "%#{query}%") if query.present? }
+
   def self.for_select
     pluck(:id, :name, :age)
   end

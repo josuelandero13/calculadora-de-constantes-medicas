@@ -5,6 +5,7 @@ class ConstantsController < ApplicationController
     @constants = FindConstants.new.call(params)
     @patients = Patient.all
     @constant_types = ConstantType.with_constants_count
+    preload_state_colors
   end
 
   def show
@@ -87,5 +88,13 @@ class ConstantsController < ApplicationController
             :patient_id, :constant_type_id, :value,
             :notes, :date_time_taken, :date, :time
           )
+  end
+
+  def preload_state_colors
+    states = @constants.map(&:calculated_state).compact.map(&:downcase)
+
+    @state_colors = ConstantRange.where("LOWER(state) IN (?)", states)
+                                 .pluck(Arel.sql("LOWER(state)"), :color_class)
+                                 .to_h
   end
 end

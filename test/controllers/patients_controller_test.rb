@@ -1,38 +1,48 @@
 require "test_helper"
 
 class PatientsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get patients_index_url
-    assert_response :success
+  setup do
+    @patient = patients(:one)
   end
 
-  test "should get show" do
-    get patients_show_url
+  test "should get index" do
+    get patients_url
     assert_response :success
   end
 
   test "should get new" do
-    get patients_new_url
+    get new_patient_url
     assert_response :success
   end
 
-  test "should get create" do
-    get patients_create_url
+  test "should create patient" do
+    assert_difference("Patient.count") do
+      post patients_url, params: { patient: { name: "New Patient", age: 30, gender: "Masculino" } }
+    end
+
+    assert_redirected_to root_path
+  end
+
+  test "should show patient" do
+    get patient_url(@patient)
     assert_response :success
   end
 
   test "should get edit" do
-    get patients_edit_url
+    get edit_patient_url(@patient)
     assert_response :success
   end
 
-  test "should get update" do
-    get patients_update_url
-    assert_response :success
+  test "should update patient" do
+    patch patient_url(@patient), params: { patient: { name: "Updated Name" } }
+    assert_redirected_to root_path
   end
 
-  test "should get destroy" do
-    get patients_destroy_url
-    assert_response :success
+  test "should destroy patient" do
+    assert_difference("Patient.count", -1) do
+      delete patient_url(@patient)
+    end
+
+    assert_redirected_to root_path
   end
 end

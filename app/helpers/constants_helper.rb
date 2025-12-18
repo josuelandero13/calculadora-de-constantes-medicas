@@ -56,17 +56,18 @@ module ConstantsHelper
     tag.th(content, scope: "col", class: classes.join(" "))
   end
 
-  def constant_state_display(constant)
+  def constant_state_display(constant, state_colors)
     state = constant&.calculated_state
-    display_text = state&.upcase || "SIN ESTADO"
+    normalized_state = state&.downcase
 
-    circle_color = state_color_for(state) || "bg-gray-400"
-
-    { color: circle_color, text: display_text }
+    {
+      text: state&.upcase || "SIN ESTADO",
+      color: state_colors[normalized_state] || "bg-gray-400"
+    }
   end
 
-  def constant_state_badge(constant)
-    state_display = constant_state_display(constant)
+  def constant_state_badge(constant, state_colors)
+    state_display = constant_state_display(constant, state_colors)
 
     tag.div class: "flex items-center space-x-2" do
       safe_join([
@@ -115,14 +116,6 @@ module ConstantsHelper
 
   private
 
-  def state_color_for(state)
-    return nil unless state.present?
-
-    Rails.cache.fetch("state_color_#{state.downcase}", expires_in: 1.hour) do
-      ConstantRange.find_by("LOWER(state) = ?", state.downcase)&.color_class
-    end
-  end
-
   def sorting_icon
     @sorting_icon ||= SORTING_ICON.html_safe
   end
@@ -152,5 +145,12 @@ module ConstantsHelper
 
   def constant_icon(key)
     ACTION_ICONS[key].html_safe
+  end
+
+  def format_measured_at(measured_at)
+    return unless measured_at
+
+    time = measured_at.is_a?(String) ? Time.zone.parse(measured_at) : measured_at
+    time&.strftime("%d/%m/%Y %I:%M %p")
   end
 end

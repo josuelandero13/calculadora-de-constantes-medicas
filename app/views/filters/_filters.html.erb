@@ -1,33 +1,73 @@
 <div class="mb-6">
   <div class="flex flex-wrap items-start gap-4">
-    <div class="bg-white rounded-lg shadow flex-1 relative" data-controller="filters">
+    <div
+      class="bg-white rounded-lg shadow flex-1 relative"
+      data-controller="filters"
+    >
       <details class="group" data-filters-target="details">
-        <summary class="flex items-center justify-between cursor-pointer p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200 list-none">
+        <summary
+          class="flex items-center justify-between cursor-pointer p-4 hover:bg-gray-50 rounded-lg
+                 transition-colors duration-200 list-none"
+        >
           <div class="flex items-center space-x-3">
             <h2 class="text-lg font-semibold text-gray-900">Filtros</h2>
-            <span class="text-sm text-gray-500">(compacto — despliega para ver más)</span>
+            <span class="text-sm text-gray-500"
+              >(compacto — despliega para ver más)</span
+            >
           </div>
-          <svg data-filters-target="chevron" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.939l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.25 8.27a.75.75 0 01-.02-1.06z" clip-rule="evenodd" />
+          <svg
+            data-filters-target="chevron"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-500 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 10.939l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75
+                 0 01-1.06 0L5.25 8.27a.75.75 0 01-.02-1.06z"
+            />
           </svg>
         </summary>
 
-        <div class="absolute top-full left-0 right-0 mt-2 bg-white p-6 rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto hidden group-open:block animate-in fade-in-0 zoom-in-95 duration-200">
+        <div
+          class="absolute top-full left-0 right-0 mt-2 bg-white p-6 rounded-lg shadow-xl border
+                 border-gray-200 z-50 max-h-96 overflow-y-auto hidden group-open:block animate-in
+                 fade-in-0 zoom-in-95 duration-200"
+        >
           <div class="space-y-8">
             <div class="space-y-6">
               <div class="space-y-2">
-                <h3 class="text-sm font-medium text-gray-700">Estado de salud</h3>
+                <h3 class="text-sm font-medium text-gray-700">
+                  Estado de salud
+                </h3>
                 <div class="flex flex-wrap gap-2">
+                  <%
+                    background_button_state = params[:state].blank? ?
+                      'bg-blue-500 text-white shadow-md' :
+                      'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    background_button_normal = params[:state] == 'Normal' ?
+                      'bg-green-500 text-white shadow-md' :
+                      'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  %>
                   <%= link_to constants_path,
-                      class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-1 #{params[:state].blank? ? 'bg-blue-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" do %>
-                    <span>Todos</span>
-                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full"><%= Constant.count %></span>
+                      class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-2000 flex
+                              items-center space-x-1 #{background_button_state}" do %>
+                      <span>Todos</span>
+                      <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full">
+                        <%= Constant.count %>
+                      </span>
                   <% end %>
-
-                  <%= link_to constants_path(state: 'Normal'),
-                      class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center space-x-1 #{params[:state] == 'Normal' ? 'bg-green-500 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" do %>
-                    <span>🟢 Normal</span>
-                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full"><%= Constant.where(calculated_state: 'Normal').count %></span>
+                  <%=
+                    link_to constants_path(state: 'Normal'),
+                      class: "px-4 py-2 rounded-full text-sm font-medium transition-all
+                              duration-200 flex items-center space-x-1 #{background_button_normal}" do %>
+                      <span>🟢 Normal</span>
+                      <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full">
+                        <%= Constant.where(calculated_state: 'Normal').count %>
+                      </span>
                   <% end %>
                 </div>
               </div>
@@ -35,7 +75,9 @@
               <%= render 'filters/type_filter' %>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100"
+            >
               <%= render 'filters/patient_filter' %>
               <%= render 'filters/date_filter' %>
             </div>
