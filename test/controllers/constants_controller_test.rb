@@ -29,6 +29,23 @@ class ConstantsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to constants_path
   end
 
+  test "should get new as turbo stream" do
+    get new_constant_url, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", @response.media_type
+  end
+
+  test "should re-render form as turbo stream on create failure" do
+    assert_no_difference("Constant.count") do
+      post constants_url, params: { constant: { value: nil } }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    end
+
+    assert_response :success
+    assert_includes @response.body, "turbo-stream"
+    assert_includes @response.body, "constant_form"
+  end
+
   test "should show constant" do
     get constant_url(@constant)
     assert_response :success

@@ -1,10 +1,9 @@
 class ConstantsController < ApplicationController
   before_action :set_constant, only: %i[edit update destroy]
+  before_action :set_collections, only: %i[index]
 
   def index
     @constants = FindConstants.new.call(params)
-    @patients = Patient.all
-    @constant_types = ConstantType.with_constants_count
     preload_state_colors
   end
 
@@ -19,13 +18,7 @@ class ConstantsController < ApplicationController
     @constant = Constant.new
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "constant_form",
-          partial: "constants/form_modal",
-          locals: { constant: @constant }
-        )
-      end
+      format.turbo_stream { render_constant_form(@constant) }
       format.html
     end
   end
@@ -38,13 +31,7 @@ class ConstantsController < ApplicationController
         format.turbo_stream
         format.html { redirect_to constants_path, notice: "Toma creada exitosamente" }
       else
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "constant_form",
-            partial: "constants/form_modal",
-            locals: { constant: @constant }
-          )
-        end
+        format.turbo_stream { render_constant_form(@constant) }
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -53,9 +40,7 @@ class ConstantsController < ApplicationController
   def edit; end
 
   def update
-    @constant.assign_attributes(constant_params)
-
-    if @constant.save
+    if @constant.update(constant_params)
       redirect_to root_path, notice: "Toma actualizada exitosamente"
     else
       render :edit
@@ -70,16 +55,21 @@ class ConstantsController < ApplicationController
 
   private
 
-  def close_modal
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.update("modal", "")
-      end
-    end
+  def render_constant_form(constant)
+    render turbo_stream: turbo_stream.replace(
+      "constant_form",
+      partial: "constants/form_modal",
+      locals: { constant: constant }
+    )
   end
 
   def set_constant
     @constant = Constant.find(params[:id])
+  end
+
+  def set_collections
+    @patients = Patient.all
+    @constant_types = ConstantType.with_constants_count
   end
 
   def constant_params
@@ -91,7 +81,9 @@ class ConstantsController < ApplicationController
   end
 
   def preload_state_colors
-    states = @constants.map(&:calculated_state).compact.map(&:downcase)
+    states = @constants.map(&:calculated_state).compact.map(&:downcase).uniq
+
+    return @state_colors = {} if states.empty?
 
     @state_colors = ConstantRange.where("LOWER(state) IN (?)", states)
                                  .pluck(Arel.sql("LOWER(state)"), :color_class)
